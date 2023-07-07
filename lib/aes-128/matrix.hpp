@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#define MATRIX_TYPE unsigned char
+#include "lib/aes-128/defines.hpp"
 
 class Matrix {
 private:

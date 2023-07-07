@@ -9,3 +9,13 @@ cc_library(
 		"key.hpp"
 	],
 )
+
+cc_library(
+	name = "matrix",
+	srcs = [
+		"matrix.cpp"
+	],
+	hdrs = [
+		"matrix.hpp"
+	]
+)

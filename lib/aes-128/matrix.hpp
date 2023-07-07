@@ -3,18 +3,21 @@
 
 #include <vector>
 
+#define MATRIX_TYPE unsigned char
+
 class Matrix {
 private:
     unsigned int rows;
     unsigned int cols;
 
 public:
-	std::vector<std::vector<unsigned int>> data;
+	std::vector<std::vector<MATRIX_TYPE>> data;
 
     Matrix();
     Matrix(unsigned int numRows, unsigned int numCols);
 
     Matrix operator*(const Matrix& other) const;
+	Matrix operator^(const Matrix& other) const;
     Matrix& operator=(const Matrix& other);
 
     void setElement(unsigned int row, unsigned int col, unsigned int value);

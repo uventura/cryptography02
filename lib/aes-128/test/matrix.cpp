@@ -4,6 +4,7 @@
 Matrix matrixA(2, 3);
 Matrix matrixB(3, 2);
 Matrix matrixC(2, 2);
+Matrix matrixD(2, 2);
 
 class MatrixTest : public ::testing::Test {
 protected:
@@ -23,6 +24,11 @@ protected:
             {58, 64},
             {139, 154}
         };
+
+        matrixD.data = {
+            {'\x19', ' '},
+            {'\x1c', '%'}
+        };
     }
 };
 
@@ -31,8 +37,13 @@ TEST_F(MatrixTest, MatrixMultiplication) {
     EXPECT_EQ(result.data, matrixC.data);
 }
 
+TEST_F(MatrixTest, MatrixXor) {
+    Matrix result = matrixA ^ matrixB;
+    EXPECT_EQ(result.data, matrixD.data);
+}
+
 TEST_F(MatrixTest, MatrixAssignment) {
-    Matrix matrixD;
-    matrixD = matrixC;
-    EXPECT_EQ(matrixD.data, matrixC.data);
+    Matrix matrixE;
+    matrixE = matrixC;
+    EXPECT_EQ(matrixE.data, matrixC.data);
 }

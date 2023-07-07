@@ -4,7 +4,7 @@
 Matrix::Matrix() : rows(0), cols(0) {}
 
 Matrix::Matrix(unsigned int numRows, unsigned int numCols) : rows(numRows), cols(numCols) {
-    data.resize(numRows, std::vector<unsigned int>(numCols, 0));
+    data.resize(numRows, std::vector<MATRIX_TYPE>(numCols, 0));
 }
 
 Matrix Matrix::operator*(const Matrix& other) const {
@@ -19,6 +19,25 @@ Matrix Matrix::operator*(const Matrix& other) const {
         for (unsigned int j = 0; j < other.cols; ++j) {
             for (unsigned int k = 0; k < cols; ++k) {
                 result.data[i][j] += data[i][k] * other.data[k][j];
+            }
+        }
+    }
+
+    return result;
+}
+
+Matrix Matrix::operator^(const Matrix& other) const {
+    if (cols != other.rows) {
+        std::cout << "Matrix dimensions are incompatible for multiplication!" << std::endl;
+        return Matrix();
+    }
+
+    Matrix result(rows, other.cols);
+
+    for (unsigned int i = 0; i < rows; ++i) {
+        for (unsigned int j = 0; j < other.cols; ++j) {
+            for (unsigned int k = 0; k < cols; ++k) {
+                result.data[i][j] += data[i][k] ^ other.data[k][j];
             }
         }
     }

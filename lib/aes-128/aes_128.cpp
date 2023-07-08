@@ -17,6 +17,8 @@ std::vector<MATRIX_TYPE> AES128::encrypt(std::string message, Key key)
     for(unsigned int index_block = 0; index_block < blocks_message.size(); ++index_block)
     {
         Matrix block = add_round_key(blocks_message[index_block], key);
+        block = sub_bytes(block);
+        block = shift_rows(block);
         blocks_result.push_back(block);
     }
 
@@ -32,7 +34,7 @@ std::string AES128::decrypt(std::vector<MATRIX_TYPE> encrypted_text, Key key)
         std::vector<MATRIX_TYPE> sub_block_vec(vec, vec + step);
         Matrix block = Matrix::vector_to_matrix(sub_block_vec, MATRIX_SIZE, MATRIX_SIZE);
 
-        (block ^ key.key_matrix()).display();
+        (inv_sub_bytes(inv_shift_rows(block)) ^ key.key_matrix()).display();
         std::cout << "\n";
     }
     return "";
@@ -59,6 +61,24 @@ Matrix AES128::inv_sub_bytes(Matrix block)
     for(unsigned int row = 0; row < block.data.size(); ++row)
         for(unsigned int col = 0; col < block.data[0].size(); ++col)
             result.data[row][col] = _inv_sbox[block.data[row][col]];
+    return result;
+}
+
+Matrix AES128::shift_rows(Matrix block)
+{
+    Matrix result = block;
+    result.shift(1, 1);
+    result.shift(2, 2);
+    result.shift(3, 3);
+    return result;
+}
+
+Matrix AES128::inv_shift_rows(Matrix block)
+{
+    Matrix result = block;
+    result.shift(1, -1);
+    result.shift(2, -2);
+    result.shift(3, -3);
     return result;
 }
 

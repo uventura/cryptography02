@@ -35,6 +35,8 @@ class AES128
         Matrix add_round_key(Matrix block, Key key);
         Matrix sub_bytes(Matrix block);
         Matrix inv_sub_bytes(Matrix block);
+        Matrix shift_rows(Matrix block);
+        Matrix inv_shift_rows(Matrix block);
 };
 
 #endif

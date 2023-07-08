@@ -1,4 +1,5 @@
 #include "lib/aes-128/key.hpp"
+#include "lib/math/random.hpp"
 
 #include <random>
 #include <limits>
@@ -14,11 +15,7 @@ void Key::generate_key_128()
 {
 	for(int i = 0; i < 16; ++i)
 	{
-		std::random_device dev;
-        std::mt19937 random_value(dev());
-        std::uniform_int_distribution<uint32_t> distribution(0, 255);
-
-		_key[i] = distribution(random_value);
+		_key[i] = Random<uint32_t>::get_random(0, 255);
 	}
 }
 

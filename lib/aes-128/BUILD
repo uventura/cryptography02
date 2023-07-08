@@ -13,7 +13,10 @@ cc_library(
 	hdrs = [
 		"key.hpp"
 	],
-	deps = [":defines"],
+	deps = [
+		":defines",
+		"//lib/math:random"
+	],
 )
 
 cc_library(

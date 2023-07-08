@@ -8,6 +8,23 @@
 #include "lib/aes-128/key.hpp"
 #include "lib/aes-128/defines.hpp"
 
+AES128::AES128()
+{
+    _mix_colums_matrix = Matrix(MATRIX_SIZE, MATRIX_SIZE);
+    _mix_colums_matrix.data = MIX_COLUMNS;
+
+    _inv_mix_columns_matrix = Matrix(MATRIX_SIZE, MATRIX_SIZE);
+    _inv_mix_columns_matrix.data = MIX_COLUMNS_INVERSE;
+
+    _lookup_mix_columns.resize(15);
+    _lookup_mix_columns[2]  = LOOKUP_MIX_COLUMN_2;
+    _lookup_mix_columns[3]  = LOOKUP_MIX_COLUMN_3;
+    _lookup_mix_columns[9]  = LOOKUP_MIX_COLUMN_9;
+    _lookup_mix_columns[11] = LOOKUP_MIX_COLUMN_11;
+    _lookup_mix_columns[13] = LOOKUP_MIX_COLUMN_13;
+    _lookup_mix_columns[14] = LOOKUP_MIX_COLUMN_14;
+}
+
 //--| AES Functionalities |---
 std::vector<MATRIX_TYPE> AES128::encrypt(std::string message, Key key)
 {
@@ -19,6 +36,7 @@ std::vector<MATRIX_TYPE> AES128::encrypt(std::string message, Key key)
         Matrix block = add_round_key(blocks_message[index_block], key);
         block = sub_bytes(block);
         block = shift_rows(block);
+        block = mix_columns(block);
         blocks_result.push_back(block);
     }
 
@@ -34,8 +52,8 @@ std::string AES128::decrypt(std::vector<MATRIX_TYPE> encrypted_text, Key key)
         std::vector<MATRIX_TYPE> sub_block_vec(vec, vec + step);
         Matrix block = Matrix::vector_to_matrix(sub_block_vec, MATRIX_SIZE, MATRIX_SIZE);
 
-        (inv_sub_bytes(inv_shift_rows(block)) ^ key.key_matrix()).display();
-        std::cout << "\n";
+        // (inv_sub_bytes(inv_shift_rows(inv_mix_columns(block))) ^ key.key_matrix()).display();
+        // std::cout << "\n";
     }
     return "";
 }
@@ -82,6 +100,38 @@ Matrix AES128::inv_shift_rows(Matrix block)
     return result;
 }
 
+Matrix AES128::mix_columns(Matrix block)
+{
+    Matrix result(MATRIX_SIZE, MATRIX_SIZE);
+    for(unsigned int col = 0; col < MATRIX_SIZE; ++col)
+    {
+        Matrix col_matrix(MATRIX_SIZE, 1);
+        for(unsigned int row = 0; row < MATRIX_SIZE; ++row)
+            col_matrix.data[row][0] = block.data[row][col];
+
+        Matrix col_result = _galois_multiply(_mix_colums_matrix, col_matrix);
+        for(unsigned int row = 0; row < MATRIX_SIZE; ++row)
+            result.data[row][col] = col_result.data[row][0];
+    }
+    return result;
+}
+
+Matrix AES128::inv_mix_columns(Matrix block)
+{
+    Matrix result(MATRIX_SIZE, MATRIX_SIZE);
+    for(unsigned int col = 0; col < MATRIX_SIZE; ++col)
+    {
+        Matrix col_matrix(MATRIX_SIZE, 1);
+        for(unsigned int row = 0; row < MATRIX_SIZE; ++row)
+            col_matrix.data[row][0] = block.data[row][col];
+
+        Matrix col_result = _galois_multiply(_inv_mix_columns_matrix, col_matrix);
+        for(unsigned int row = 0; row < MATRIX_SIZE; ++row)
+            result.data[row][col] = col_result.data[row][0];
+    }
+    return result;
+}
+
 // PRIVATE
 std::vector<Matrix> AES128::create_empty_blocks(unsigned int blocks_number)
 {
@@ -93,7 +143,28 @@ std::vector<Matrix> AES128::create_empty_blocks(unsigned int blocks_number)
     return blocks;
 }
 
+Matrix AES128::_galois_multiply(Matrix A, Matrix B)
+{
+    // A => 4X4; B => 4X1
+    auto matrix_a = A.data;
+    auto matrix_b = B.data;
+
+    Matrix result(MATRIX_SIZE, 1);
+
+    for (unsigned int i = 0; i < MATRIX_SIZE; ++i) {
+        for (unsigned int k = 0; k < MATRIX_SIZE; ++k) {
+            auto table = matrix_a[i][k];
+            if(table != 1)
+                result.data[i][0] ^= _lookup_mix_columns[table][matrix_b[k][0]];
+            else
+                result.data[i][0] ^= matrix_b[k][0];
+        }
+    }
+
+    return result;
+}
 // PUBLIC
+
 std::string AES128::remove_white_spaces(std::string message)
 {
     std::string result = message;

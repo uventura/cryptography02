@@ -22,6 +22,7 @@ public:
 
     void setElement(unsigned int row, unsigned int col, unsigned int value);
     void display() const;
+    inline void resize(unsigned int n_rows, unsigned int n_cols){rows = n_rows, cols = n_cols;};
 
     std::vector<MATRIX_TYPE> vector();
 

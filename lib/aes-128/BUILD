@@ -21,6 +21,21 @@ cc_library(
 )
 
 cc_library(
+	name = "key_schedule",
+	srcs = [
+		"key_schedule.cpp"
+	],
+	hdrs = [
+		"key_schedule.hpp"
+	],
+	deps = [
+		"//lib/aes-128:aes_128",
+        "//lib/aes-128:defines",
+        "//lib/math:matrix",
+	]
+)
+
+cc_library(
 	name = "aes_128",
 	srcs = [
 		"aes_128.cpp"

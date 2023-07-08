@@ -43,7 +43,9 @@ class AES128
 
         //--| AES Steps |---
         void generate_key_expansion(Key key);
-        Matrix aes_round(Matrix block);
+
+        Matrix round(Matrix block, Matrix key);
+        Matrix inv_round(Matrix block, Matrix key);
 
         Matrix add_round_key(Matrix block, Matrix key);
 

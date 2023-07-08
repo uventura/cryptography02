@@ -1,7 +1,7 @@
 #ifndef ALGEBRA_H
 #define ALGEBRA_H
 
-#include <numeric>
+#include <cstdlib>
 
 class Algebra
 {

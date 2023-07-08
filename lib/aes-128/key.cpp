@@ -15,16 +15,15 @@ void Key::generate_key_128()
 {
 	for(int i = 0; i < 16; ++i)
 	{
-		_key[i] = Random<uint32_t>::get_random(0, 255);
+		_key[i] = static_cast<MATRIX_TYPE>(Random<uint32_t>::get_random(0, 255));
 	}
 }
 
 Matrix Key::key_matrix()
 {
     Matrix key_matrix(MATRIX_SIZE, MATRIX_SIZE);
-
     unsigned int row = 0, col = 0;
-    for(unsigned int k_index = 0; k_index < _key.size(); ++k_index)
+    for(unsigned int k_index = 0; k_index < MATRIX_SIZE * MATRIX_SIZE; ++k_index)
     {
         key_matrix.data[row][col] = _key[k_index];
         if(col >= MATRIX_SIZE)

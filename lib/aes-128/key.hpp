@@ -1,3 +1,6 @@
+#ifndef AES_128_KEY
+#define AES_128_KEY
+
 #include <iostream>
 #include <array>
 
@@ -25,3 +28,5 @@ class Key
 			return stream;
 		}
 };
+
+#endif

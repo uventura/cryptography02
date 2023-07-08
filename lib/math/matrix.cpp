@@ -89,7 +89,6 @@ void Matrix::shift(unsigned int row, int shift)
     std::vector<MATRIX_TYPE> row_data(cols);
     for(int i = 0; i < cols; ++i)
     {
-        std::cout << cols << " Shift: " << ((int)(cols)) << "=>" << i << "\n";
         row_data[Algebra::mod((i + shift), cols)] = data[row][i];
     }
     data[row] = row_data;

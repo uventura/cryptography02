@@ -65,7 +65,7 @@ void Matrix::setElement(unsigned int row, unsigned int col, unsigned int value) 
 void Matrix::display() const {
     for (const auto& row : data) {
         for (unsigned int element : row) {
-            std::cout << (char)(element) << "*";
+            std::cout << element << " ";
         }
         std::cout << std::endl;
     }

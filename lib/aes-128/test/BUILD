@@ -10,3 +10,14 @@ cc_test(
         "//lib/math:random",
     ],
 )
+
+cc_test(
+    name = "key",
+    srcs = [
+        "key.cpp"
+    ],
+    deps = [
+        "@gtest//:gtest_main",
+        "//lib/aes-128:key"
+    ]
+)

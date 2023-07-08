@@ -16,6 +16,8 @@ class Key
 	public:
 		Key();
 
+		inline void set_key(std::array<MATRIX_TYPE, KEY_SIZE> key_val){_key = key_val;};
+
 		Matrix key_matrix();
 		inline std::array<MATRIX_TYPE, KEY_SIZE> get_key(){return _key;};
 

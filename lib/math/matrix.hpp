@@ -24,6 +24,8 @@ public:
     void display() const;
 
     std::vector<MATRIX_TYPE> vector();
+
+    static Matrix vector_to_matrix(std::vector<MATRIX_TYPE> vector, unsigned int num_rows, unsigned int num_cols);
 };
 
 #endif  // MATRIX_H

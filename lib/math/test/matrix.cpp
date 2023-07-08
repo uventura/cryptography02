@@ -57,3 +57,14 @@ TEST_F(MatrixTest, MatrixToVector) {
 
     EXPECT_EQ(vectorA, expected);
 }
+
+TEST_F(MatrixTest, VectorToMatrix) {
+    auto result = Matrix::vector_to_matrix({1,2,3,4,5,6}, 2, 3);
+    EXPECT_EQ(result.data, matrixA.data);
+}
+
+TEST_F(MatrixTest, VectorToMatrixInversion) {
+    auto vectorA = matrixA.vector();
+    auto new_matrixA = Matrix::vector_to_matrix(vectorA, 3, 2);
+    EXPECT_EQ(vectorA, new_matrixA.vector());
+}

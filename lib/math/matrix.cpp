@@ -81,3 +81,27 @@ std::vector<MATRIX_TYPE> Matrix::vector()
 
     return result;
 }
+
+Matrix Matrix::vector_to_matrix(std::vector<MATRIX_TYPE> vector, unsigned int num_rows, unsigned int num_cols)
+{
+    Matrix result(num_rows, num_cols);
+    unsigned int c_row = 0, c_col = 0;
+
+    for(unsigned int i = 0; i < vector.size(); ++i)
+    {
+        if(c_col >= num_cols)
+        {
+            c_row += 1;
+            result.data[c_row][0] = vector[i];
+
+            c_col = 1;
+        }
+        else
+        {
+            result.data[c_row][c_col] = vector[i];
+            c_col += 1;
+        }
+    }
+
+    return result;
+}

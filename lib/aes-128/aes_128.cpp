@@ -36,32 +36,58 @@ std::vector<MATRIX_TYPE> AES128::encrypt(std::string message, Key key)
 
     for(unsigned int index_block = 0; index_block < blocks_message.size(); ++index_block)
     {
-        auto block = round(blocks_message[index_block], key.key_matrix());
+        Matrix block;
+        // CBC
+        if(index_block == 0)
+            block = rounds(blocks_message[index_block]);
+        else
+            block = rounds(blocks_result.back() ^ blocks_message[index_block]);
+
         blocks_result.push_back(block);
     }
-
     std::vector<MATRIX_TYPE> result = get_blocks_vector(blocks_result);
     return result;
 }
 
 std::string AES128::decrypt(std::vector<MATRIX_TYPE> encrypted_text, Key key)
 {
+    generate_key_expansion(key);
+
+    std::vector<Matrix> blocks_result;
+    Matrix prev_block_enc;
+    unsigned int block_count = 0;
+
     unsigned int step = MATRIX_SIZE * MATRIX_SIZE;
     for(auto vec = encrypted_text.begin(); vec != encrypted_text.end(); vec += step)
     {
         std::vector<MATRIX_TYPE> sub_block_vec(vec, vec + step);
         Matrix block = Matrix::vector_to_matrix(sub_block_vec, MATRIX_SIZE, MATRIX_SIZE);
 
-        inv_round(block, key.key_matrix()).display();
-        std::cout << "\n";
+        auto reverted_block = inv_rounds(block);
+        // CBC
+        if(block_count != 0)
+            reverted_block = reverted_block ^ prev_block_enc;
+
+        blocks_result.push_back(reverted_block);
+        block_count += 1;
+        prev_block_enc = block;
     }
-    return "";
+
+    std::vector<MATRIX_TYPE> result = get_blocks_vector(blocks_result);
+
+    std::string str_result = "";
+    for(auto& element:result)
+        str_result += element;
+
+    return str_result;
 }
 
 //---| AES Steps |---
 void AES128::generate_key_expansion(Key key)
 {
+    keys_schedule_buffer.clear();
     keys_schedule_buffer.push_back(key.key_matrix());
+
     for(unsigned int i = 1; i <= ROUNDS; ++i)
     {
         Matrix last_key = keys_schedule_buffer.back();
@@ -98,6 +124,24 @@ void AES128::generate_key_expansion(Key key)
 
         keys_schedule_buffer.push_back(next_key);
     }
+}
+
+Matrix AES128::rounds(Matrix block)
+{
+    for(unsigned int index_round = 0; index_round < ROUNDS + 1; ++index_round)
+    {
+        block = round(block, keys_schedule_buffer[index_round]);
+    }
+    return block;
+}
+
+Matrix AES128::inv_rounds(Matrix block)
+{
+    for(int index_round = ROUNDS; index_round > -1; index_round -= 1)
+    {
+        block = inv_round(block, keys_schedule_buffer[index_round]);
+    }
+    return block;
 }
 
 Matrix AES128::round(Matrix block, Matrix key)
@@ -224,13 +268,6 @@ Matrix AES128::_galois_multiply(Matrix A, Matrix B)
 }
 // PUBLIC
 
-std::string AES128::remove_white_spaces(std::string message)
-{
-    std::string result = message;
-    result.erase(std::remove_if(result.begin(), result.end(), ::isspace), result.end());
-    return result;
-}
-
 std::string AES128::create_padding(std::string message)
 {
     int padding_amount = message.size() % 16;
@@ -243,7 +280,6 @@ std::string AES128::create_padding(std::string message)
 
 std::vector<Matrix> AES128::get_blocks_matrix(std::string message)
 {
-    // std::string input = remove_white_spaces(message);
     std::string input = message;
     input = create_padding(input);
 

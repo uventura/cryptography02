@@ -32,7 +32,6 @@ class AES128
         std::string decrypt(std::vector<MATRIX_TYPE> encrypted_text, Key key);
 
         //--| Data Functions |---
-        std::string remove_white_spaces(std::string message);
         std::string create_padding(std::string message);
 
         std::vector<Matrix> get_blocks_matrix(std::string message);
@@ -44,6 +43,8 @@ class AES128
         //--| AES Steps |---
         void generate_key_expansion(Key key);
 
+        Matrix rounds(Matrix block);
+        Matrix inv_rounds(Matrix block);
         Matrix round(Matrix block, Matrix key);
         Matrix inv_round(Matrix block, Matrix key);
 

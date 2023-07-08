@@ -23,9 +23,9 @@ protected:
 };
 
 //---| AES-128 Functionalities |---
-TEST_F(AES128Test, AES128Encrypt) {
-    aes.encrypt(random_message, random_key);
-    EXPECT_EQ(1, 1);
+TEST_F(AES128Test, AES128EncryptDecrypt) {
+    auto enc_message = aes.encrypt(random_message, random_key);
+    EXPECT_EQ(random_message, aes.decrypt(enc_message, random_key));
 }
 
 //---| AES-128 Steps |---
@@ -63,11 +63,6 @@ TEST_F(AES128Test, MixColumnsTest)
 }
 
 //---| AES-128 Basic Functionalities |---
-TEST_F(AES128Test, RemoveWhiteSpacesTest) {
-    std::string result = aes.remove_white_spaces("This is my string ");
-    EXPECT_EQ(result, "Thisismystring");
-}
-
 TEST_F(AES128Test, PaddingIncorrectString)
 {
     std::string result = aes.create_padding("aaaaaaaaaaaaaaaaaaaa");

@@ -55,6 +55,13 @@ TEST_F(AES128Test, ShiftRowsTest)
     EXPECT_EQ(aes.shift_rows(aes.inv_shift_rows(matrix)).data, matrix.data);
 }
 
+TEST_F(AES128Test, MixColumnsTest)
+{
+    Matrix matrix = aes.get_blocks_matrix("ipsum dolor sitLorem amet, consectet")[1];
+    EXPECT_EQ(aes.inv_mix_columns(aes.mix_columns(matrix)).data, matrix.data);
+    EXPECT_EQ(aes.mix_columns(aes.inv_mix_columns(matrix)).data, matrix.data);
+}
+
 //---| AES-128 Basic Functionalities |---
 TEST_F(AES128Test, RemoveWhiteSpacesTest) {
     std::string result = aes.remove_white_spaces("This is my string ");

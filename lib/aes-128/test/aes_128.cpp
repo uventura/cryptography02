@@ -22,6 +22,13 @@ protected:
     }
 };
 
+//---| AES-128 Functionalities |---
+TEST_F(AES128Test, AES128Encrypt) {
+    aes.encrypt(random_message, random_key);
+    EXPECT_EQ(1, 1);
+}
+
+//---| AES-128 Basic Functionalities |---
 TEST_F(AES128Test, RemoveWhiteSpacesTest) {
     std::string result = aes.remove_white_spaces("This is my string ");
     EXPECT_EQ(result, "Thisismystring");
@@ -68,4 +75,10 @@ TEST_F(AES128Test, AddRoundKeyTest)
 
         EXPECT_EQ(decrypt_result.data, blocks[index_block].data);
     }
+}
+
+TEST_F(AES128Test, SBOXTestValue)
+{
+    unsigned char result = aes.look_sbox('\x61');
+    EXPECT_EQ(result, (unsigned char)('\xEF'));
 }

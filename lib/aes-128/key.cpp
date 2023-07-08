@@ -5,9 +5,9 @@
 #include <iostream>
 #include <array>
 
-std::array<uint8_t, 16> Key::generate_key_128()
+std::array<MATRIX_TYPE, 16> Key::generate_key_128()
 {
-	std::array<uint8_t, 16> key;
+	std::array<MATRIX_TYPE, 16> key;
 	for(int i = 0; i < 16; ++i)
 	{
 		std::random_device dev;

@@ -82,3 +82,9 @@ TEST_F(AES128Test, SBOXTestValue)
     unsigned char result = aes.look_sbox('\x61');
     EXPECT_EQ(result, (unsigned char)('\xEF'));
 }
+
+TEST_F(AES128Test, InvSBOXTestValue)
+{
+    unsigned char result = aes.look_inv_sbox('\xA1');
+    EXPECT_EQ(result, (unsigned char)('\xF1'));
+}

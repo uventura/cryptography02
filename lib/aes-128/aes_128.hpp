@@ -14,10 +14,9 @@ class AES128
 {
     private:
         std::vector<Matrix> create_empty_blocks(unsigned int blocks_number);
-        unsigned char _sbox[256];
+        unsigned char _sbox[256] = AES128_SBOX;
+        unsigned char _inv_sbox[256] = AES128_INV_SBOX;
     public:
-        AES128();
-
         //--| AES Functionalities |---
         std::vector<MATRIX_TYPE> encrypt(std::string message, Key key);
         std::string decrypt(std::vector<MATRIX_TYPE> encrypted_text, Key key);
@@ -29,8 +28,8 @@ class AES128
         std::vector<Matrix> get_blocks_matrix(std::string message);
         std::vector<MATRIX_TYPE> get_blocks_vector(std::vector<Matrix> blocks);
 
-        void generate_sbox();
         inline unsigned char look_sbox(unsigned char value){return _sbox[value];};
+        inline unsigned char look_inv_sbox(unsigned char value){return _inv_sbox[value];};
 
         //--| AES Steps |---
         Matrix add_round_key(Matrix block, Key key);

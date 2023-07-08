@@ -6,11 +6,7 @@
 #include "lib/aes-128/aes_128.hpp"
 #include "lib/math/matrix.hpp"
 #include "lib/aes-128/key.hpp"
-
-AES128::AES128()
-{
-    generate_sbox();
-}
+#include "lib/aes-128/defines.hpp"
 
 //--| AES Functionalities |---
 std::vector<MATRIX_TYPE> AES128::encrypt(std::string message, Key key)
@@ -123,30 +119,4 @@ std::vector<MATRIX_TYPE> AES128::get_blocks_vector(std::vector<Matrix> blocks)
     }
 
     return result;
-}
-
-// https://en.wikipedia.org/wiki/Rijndael_S-box
-void AES128::generate_sbox()
-{
-    unsigned char p = 1, q = 1;
-
-	/* loop invariant: p * q == 1 in the Galois field */
-	do {
-		/* multiply p by 3 */
-		p = p ^ (p << 1) ^ (p & 0x80 ? 0x1B : 0);
-
-		/* divide q by 3 (equals multiplication by 0xf6) */
-		q ^= q << 1;
-		q ^= q << 2;
-		q ^= q << 4;
-		q ^= q & 0x80 ? 0x09 : 0;
-
-		/* compute the affine transformation */
-		unsigned char xformed = q ^ ROTL8(q, 1) ^ ROTL8(q, 2) ^ ROTL8(q, 3) ^ ROTL8(q, 4);
-
-		_sbox[p] = xformed ^ 0x63;
-	} while (p != 1);
-
-	/* 0 is a special case since it has no inverse */
-	_sbox[0] = 0x63;
 }

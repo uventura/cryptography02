@@ -16,6 +16,7 @@ cc_library(
 	deps = [
 		":defines",
 		"//lib/math:random"
+		"//lib/math:matrix"
 	],
 )
 

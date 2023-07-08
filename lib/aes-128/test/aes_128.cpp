@@ -1,7 +1,7 @@
 #include <string>
 
 #include "lib/aes-128/aes_128.hpp"
-#include "lib/aes-128/matrix.hpp"
+#include "lib/math/matrix.hpp"
 #include "lib/aes-128/defines.hpp"
 #include "lib/aes-128/key.hpp"
 #include "lib/math/random.hpp"

@@ -20,19 +20,6 @@ cc_library(
 )
 
 cc_library(
-	name = "matrix",
-	srcs = [
-		"matrix.cpp"
-	],
-	hdrs = [
-		"matrix.hpp"
-	],
-	deps = [
-		":defines"
-	]
-)
-
-cc_library(
 	name = "aes_128",
 	srcs = [
 		"aes_128.cpp"
@@ -41,7 +28,7 @@ cc_library(
 		"aes_128.hpp"
 	],
 	deps = [
-		":matrix",
+		"//lib/math:matrix",
 		":key",
 		":defines"
 	]

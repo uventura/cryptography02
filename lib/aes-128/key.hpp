@@ -5,7 +5,7 @@
 #include <array>
 
 #include "lib/aes-128/defines.hpp"
-#include "lib/aes-128/matrix.hpp"
+#include "lib/math/matrix.hpp"
 
 class Key
 {

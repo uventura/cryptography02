@@ -6,3 +6,16 @@ cc_library(
         "random.hpp"
     ]
 )
+
+cc_library(
+	name = "matrix",
+	srcs = [
+		"matrix.cpp"
+	],
+	hdrs = [
+		"matrix.hpp"
+	],
+	deps = [
+		"//lib/aes-128:defines"
+	]
+)

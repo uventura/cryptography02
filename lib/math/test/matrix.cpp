@@ -1,4 +1,4 @@
-#include "lib/aes-128/matrix.hpp"
+#include "lib/math/matrix.hpp"
 #include "gtest/gtest.h"
 
 Matrix matrixA(2, 3);
@@ -38,7 +38,8 @@ TEST_F(MatrixTest, MatrixMultiplication) {
 }
 
 TEST_F(MatrixTest, MatrixXor) {
-    Matrix result = matrixA ^ matrixB;
+    Matrix result = matrixC ^ matrixD;
+    result = result ^ matrixC;
     EXPECT_EQ(result.data, matrixD.data);
 }
 

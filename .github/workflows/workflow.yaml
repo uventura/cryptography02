@@ -2,7 +2,7 @@ on: push
 name: My Action
 jobs:
   checks:
-    name: run
+    name: Testing Cryptography Project
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master

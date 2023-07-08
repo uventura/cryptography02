@@ -17,6 +17,7 @@ cc_test(
     deps = [
         "@gtest//:gtest_main",
         "//lib/aes-128:aes_128",
-        "//lib/aes-128:matrix"
+        "//lib/aes-128:matrix",
+        "//lib/math:random",
     ],
 )

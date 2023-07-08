@@ -3,14 +3,23 @@
 #include "lib/aes-128/aes_128.hpp"
 #include "lib/aes-128/matrix.hpp"
 #include "lib/aes-128/defines.hpp"
+#include "lib/aes-128/key.hpp"
+#include "lib/math/random.hpp"
 
 #include "gtest/gtest.h"
 
 AES128 aes;
+Key random_key;
+std::string random_message;
 
 class AES128Test : public ::testing::Test {
 protected:
-    void SetUp() override {}
+    void SetUp() override
+    {
+        // Generate Random Message(Perfect Size to Fit with Blocks)
+        for(unsigned int i = 0; i < 112; ++i)
+            random_message += static_cast<char>('a' + Random<uint32_t>::get_random(0, 25));
+    }
 };
 
 TEST_F(AES128Test, RemoveWhiteSpacesTest) {
@@ -47,4 +56,16 @@ TEST_F(AES128Test, TestingBlocksConstruction)
         {'c','t','e','t'}
     };
     EXPECT_EQ(result[1].data, result_1);
+}
+
+TEST_F(AES128Test, AddRoundKeyTest)
+{
+    std::vector<Matrix> blocks = aes.get_blocks_matrix(random_message);
+    for(unsigned int index_block = 0; index_block < blocks.size(); ++index_block)
+    {
+        Matrix encrypt_result = aes.add_round_key(blocks[index_block], random_key);
+        Matrix decrypt_result = encrypt_result ^ random_key.key_matrix();
+
+        EXPECT_EQ(decrypt_result.data, blocks[index_block].data);
+    }
 }

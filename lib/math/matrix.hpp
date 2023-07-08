@@ -25,6 +25,7 @@ public:
 
     std::vector<MATRIX_TYPE> vector();
 
+    void shift(unsigned int row, int shift);
     static Matrix vector_to_matrix(std::vector<MATRIX_TYPE> vector, unsigned int num_rows, unsigned int num_cols);
 };
 

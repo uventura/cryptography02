@@ -7,6 +7,7 @@ Matrix matrixA(2, 3);
 Matrix matrixB(3, 2);
 Matrix matrixC(2, 2);
 Matrix matrixD(2, 2);
+Matrix matrixE(3, 3);
 
 class MatrixTest : public ::testing::Test {
 protected:
@@ -30,6 +31,12 @@ protected:
         matrixD.data = {
             {'\x19', ' '},
             {'\x1c', '%'}
+        };
+
+        matrixE.data = {
+            {1,2,3},
+            {4,5,6},
+            {7,8,9}
         };
     }
 };
@@ -56,6 +63,18 @@ TEST_F(MatrixTest, MatrixToVector) {
     std::vector<MATRIX_TYPE> expected = {1,2,3,4,5,6};
 
     EXPECT_EQ(vectorA, expected);
+}
+
+TEST_F(MatrixTest, ShiftMatrix) {
+    std::vector<std::vector<MATRIX_TYPE>> expected_shift_matrix = {
+        {1,2,3},
+        {6,4,5},
+        {8,7,9}
+    };
+
+    matrixE.shift(1, 1);
+    matrixE.shift(2, -1);
+    EXPECT_EQ(matrixE.data, expected_shift_matrix);
 }
 
 TEST_F(MatrixTest, VectorToMatrix) {

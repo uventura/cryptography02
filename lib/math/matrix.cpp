@@ -63,7 +63,7 @@ void Matrix::setElement(unsigned int row, unsigned int col, unsigned int value) 
 void Matrix::display() const {
     for (const auto& row : data) {
         for (unsigned int element : row) {
-            std::cout << element << " ";
+            std::cout << (unsigned char)(element) << " ";
         }
         std::cout << std::endl;
     }
@@ -80,6 +80,16 @@ std::vector<MATRIX_TYPE> Matrix::vector()
     }
 
     return result;
+}
+
+void Matrix::shift(unsigned int row, int shift)
+{
+    std::vector<MATRIX_TYPE> row_data(cols);
+    for(int i = 0; i < cols; ++i)
+    {
+        row_data[i] = data[row][(i + shift) % cols];
+    }
+    data[row] = row_data;
 }
 
 Matrix Matrix::vector_to_matrix(std::vector<MATRIX_TYPE> vector, unsigned int num_rows, unsigned int num_cols)

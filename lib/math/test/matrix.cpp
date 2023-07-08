@@ -69,11 +69,11 @@ TEST_F(MatrixTest, ShiftMatrix) {
     std::vector<std::vector<MATRIX_TYPE>> expected_shift_matrix = {
         {1,2,3},
         {6,4,5},
-        {8,7,9}
+        {9,7,8}
     };
 
     matrixE.shift(1, 1);
-    matrixE.shift(2, -1);
+    matrixE.shift(2, -2);
     EXPECT_EQ(matrixE.data, expected_shift_matrix);
 }
 

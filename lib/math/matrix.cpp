@@ -1,5 +1,9 @@
-#include "matrix.hpp"
+#include "lib/math/matrix.hpp"
+#include "lib/math/algebra.hpp"
+
 #include <iostream>
+#include <functional>   // std::modulus, std::bind2nd
+#include <algorithm>    // std::transform
 
 Matrix::Matrix() : rows(0), cols(0) {}
 
@@ -85,9 +89,12 @@ std::vector<MATRIX_TYPE> Matrix::vector()
 void Matrix::shift(unsigned int row, int shift)
 {
     std::vector<MATRIX_TYPE> row_data(cols);
+
+    // std::transform (numbers, numbers+5, remainders, std::bind2nd(std::modulus<int>(),2));
     for(int i = 0; i < cols; ++i)
     {
-        row_data[i] = data[row][(i + shift) % cols];
+        std::cout << cols << " Shift: " << ((int)(cols)) << "=>" << i << "\n";
+        row_data[Algebra::mod((i + shift), cols)] = data[row][i];
     }
     data[row] = row_data;
 }

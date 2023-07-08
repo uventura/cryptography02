@@ -9,3 +9,14 @@ cc_test(
         "//lib/aes-128:defines"
     ],
 )
+
+cc_test(
+    name = "algebra",
+    srcs = [
+        "algebra.cpp"
+    ],
+    deps = [
+        "@gtest//:gtest_main",
+        "//lib/math:algebra",
+    ],
+)

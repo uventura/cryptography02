@@ -27,18 +27,16 @@ Matrix Matrix::operator*(const Matrix& other) const {
 }
 
 Matrix Matrix::operator^(const Matrix& other) const {
-    if (cols != other.rows) {
-        std::cout << "Matrix dimensions are incompatible for multiplication!" << std::endl;
+    if (cols != other.cols || rows != other.rows) {
+        std::cout << "Matrix dimensions are incompatible for XOR!" << std::endl;
         return Matrix();
     }
 
-    Matrix result(rows, other.cols);
+    Matrix result(rows, cols);
 
     for (unsigned int i = 0; i < rows; ++i) {
-        for (unsigned int j = 0; j < other.cols; ++j) {
-            for (unsigned int k = 0; k < cols; ++k) {
-                result.data[i][j] += data[i][k] ^ other.data[k][j];
-            }
+        for (unsigned int j = 0; j < cols; ++j) {
+            result.data[i][j] = data[i][j] ^ other.data[i][j];
         }
     }
 

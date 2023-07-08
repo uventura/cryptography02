@@ -34,7 +34,7 @@ TEST_F(AES128Test, AddRoundKeyTest)
     std::vector<Matrix> blocks = aes.get_blocks_matrix(random_message);
     for(unsigned int index_block = 0; index_block < blocks.size(); ++index_block)
     {
-        Matrix encrypt_result = aes.add_round_key(blocks[index_block], random_key);
+        Matrix encrypt_result = aes.add_round_key(blocks[index_block], random_key.key_matrix());
         Matrix decrypt_result = encrypt_result ^ random_key.key_matrix();
 
         EXPECT_EQ(decrypt_result.data, blocks[index_block].data);
@@ -76,7 +76,7 @@ TEST_F(AES128Test, PaddingIncorrectString)
 
 TEST_F(AES128Test, TestingBlocksConstruction)
 {
-    std::vector<Matrix> result = aes.get_blocks_matrix("Lorem ipsum dolor sit amet, consectet");
+    std::vector<Matrix> result = aes.get_blocks_matrix("Loremipsumdolorsitamet,consectet");
 
     //---| Check Number of Generated Blocks |---
     EXPECT_EQ(result.size(), 2);

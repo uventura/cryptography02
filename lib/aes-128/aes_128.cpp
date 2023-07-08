@@ -7,6 +7,7 @@
 #include "lib/math/matrix.hpp"
 #include "lib/aes-128/key.hpp"
 #include "lib/aes-128/defines.hpp"
+#include "lib/aes-128/key_schedule.hpp"
 
 AES128::AES128()
 {
@@ -28,12 +29,14 @@ AES128::AES128()
 //--| AES Functionalities |---
 std::vector<MATRIX_TYPE> AES128::encrypt(std::string message, Key key)
 {
+    generate_key_expansion(key);
+
     std::vector<Matrix> blocks_message = get_blocks_matrix(message);
     std::vector<Matrix> blocks_result;
 
     for(unsigned int index_block = 0; index_block < blocks_message.size(); ++index_block)
     {
-        Matrix block = add_round_key(blocks_message[index_block], key);
+        Matrix block = add_round_key(blocks_message[index_block], key.key_matrix());
         block = sub_bytes(block);
         block = shift_rows(block);
         block = mix_columns(block);
@@ -52,16 +55,57 @@ std::string AES128::decrypt(std::vector<MATRIX_TYPE> encrypted_text, Key key)
         std::vector<MATRIX_TYPE> sub_block_vec(vec, vec + step);
         Matrix block = Matrix::vector_to_matrix(sub_block_vec, MATRIX_SIZE, MATRIX_SIZE);
 
-        // (inv_sub_bytes(inv_shift_rows(inv_mix_columns(block))) ^ key.key_matrix()).display();
-        // std::cout << "\n";
+        (inv_sub_bytes(inv_shift_rows(inv_mix_columns(block))) ^ key.key_matrix()).display();
+        std::cout << "\n";
     }
     return "";
 }
 
 //---| AES Steps |---
-Matrix AES128::add_round_key(Matrix block, Key key)
+void AES128::generate_key_expansion(Key key)
 {
-    return block ^ key.key_matrix();
+    keys_schedule_buffer.push_back(key.key_matrix());
+    for(unsigned int i = 1; i <= ROUNDS; ++i)
+    {
+        Matrix last_key = keys_schedule_buffer.back();
+
+        Matrix column_key(MATRIX_SIZE, 1);
+        column_key.data = {
+            {last_key.data[0][3]},
+            {last_key.data[1][3]},
+            {last_key.data[2][3]},
+            {last_key.data[3][3]},
+        };
+
+        column_key = KeySchedule::rot_word(column_key);
+        column_key = KeySchedule::sub_word(column_key);
+        column_key = KeySchedule::rcon(column_key, i);
+
+        auto col_v = column_key.data;
+
+        Matrix next_key(MATRIX_SIZE, MATRIX_SIZE);
+        for(unsigned int col = 0; col < MATRIX_SIZE; ++col)
+        {
+            col_v = {
+                {(unsigned char)(col_v[0][0] ^ last_key.data[0][col])},
+                {(unsigned char)(col_v[1][0] ^ last_key.data[1][col])},
+                {(unsigned char)(col_v[2][0] ^ last_key.data[2][col])},
+                {(unsigned char)(col_v[3][0] ^ last_key.data[3][col])}
+            };
+
+            next_key.set_element(0, col, col_v[0][0]);
+            next_key.set_element(1, col, col_v[1][0]);
+            next_key.set_element(2, col, col_v[2][0]);
+            next_key.set_element(3, col, col_v[3][0]);
+        }
+
+        keys_schedule_buffer.push_back(next_key);
+    }
+}
+
+Matrix AES128::add_round_key(Matrix block, Matrix key)
+{
+    return block ^ key;
 }
 
 Matrix AES128::sub_bytes(Matrix block)
@@ -184,7 +228,8 @@ std::string AES128::create_padding(std::string message)
 
 std::vector<Matrix> AES128::get_blocks_matrix(std::string message)
 {
-    std::string input = remove_white_spaces(message);
+    // std::string input = remove_white_spaces(message);
+    std::string input = message;
     input = create_padding(input);
 
     std::vector<Matrix> blocks = create_empty_blocks(input.size() / 16);

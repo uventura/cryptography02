@@ -54,7 +54,7 @@ Matrix& Matrix::operator=(const Matrix& other) {
     return *this;
 }
 
-void Matrix::setElement(unsigned int row, unsigned int col, unsigned int value) {
+void Matrix::set_element(unsigned int row, unsigned int col, unsigned char value) {
     if (row < rows && col < cols) {
         data[row][col] = value;
     } else {

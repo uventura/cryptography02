@@ -22,6 +22,8 @@ class AES128
         std::vector<std::vector<MATRIX_TYPE>> _lookup_mix_columns;
 
         Matrix _galois_multiply(Matrix A, Matrix B);
+
+        std::vector<Matrix> keys_schedule_buffer;
     public:
         AES128();
 
@@ -40,7 +42,10 @@ class AES128
         inline unsigned char look_inv_sbox(unsigned char value){return _inv_sbox[value];};
 
         //--| AES Steps |---
-        Matrix add_round_key(Matrix block, Key key);
+        void generate_key_expansion(Key key);
+        Matrix aes_round(Matrix block);
+
+        Matrix add_round_key(Matrix block, Matrix key);
 
         Matrix sub_bytes(Matrix block);
         Matrix inv_sub_bytes(Matrix block);

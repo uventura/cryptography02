@@ -20,7 +20,7 @@ public:
 	Matrix operator^(const Matrix& other) const;
     Matrix& operator=(const Matrix& other);
 
-    void setElement(unsigned int row, unsigned int col, unsigned int value);
+    void set_element(unsigned int row, unsigned int col, unsigned char value);
     void display() const;
     inline void resize(unsigned int n_rows, unsigned int n_cols){rows = n_rows, cols = n_cols;};
 

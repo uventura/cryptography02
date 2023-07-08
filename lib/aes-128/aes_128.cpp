@@ -1,6 +1,30 @@
-#include "lib/aes-128/aes_128.hpp"
+#include <string>
+#include <iostream>
+#include <algorithm>
+#include <cctype>
 
+#include "lib/aes-128/aes_128.hpp"
 #include "lib/aes-128/matrix.hpp"
+#include "lib/aes-128/key.hpp"
+
+//--| AES Functionalities |---
+std::vector<MATRIX_TYPE> AES128::encrypt(std::string message, Key key)
+{
+    std::vector<Matrix> blocks_message = get_blocks_matrix(message);
+
+    blocks_message[0].display();
+
+    add_round_key(blocks_message[0], key).display();
+
+    std::vector<MATRIX_TYPE> result;
+    return result;
+}
+
+//---| AES Steps |---
+Matrix AES128::add_round_key(Matrix block, Key key)
+{
+    return block ^ key.key_matrix();
+}
 
 // PRIVATE
 std::vector<Matrix> AES128::create_empty_blocks(unsigned int blocks_number)
@@ -10,7 +34,6 @@ std::vector<Matrix> AES128::create_empty_blocks(unsigned int blocks_number)
     {
         blocks.push_back(Matrix(4, 4));
     }
-    std::cout << "Number Of Blocks: " << blocks.size() << "\n";
     return blocks;
 }
 

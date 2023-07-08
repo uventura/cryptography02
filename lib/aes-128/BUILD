@@ -42,6 +42,7 @@ cc_library(
 	],
 	deps = [
 		":matrix",
+		":key",
 		":defines"
 	]
 )

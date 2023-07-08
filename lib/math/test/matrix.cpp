@@ -1,4 +1,6 @@
 #include "lib/math/matrix.hpp"
+#include "lib/aes-128/defines.hpp"
+
 #include "gtest/gtest.h"
 
 Matrix matrixA(2, 3);
@@ -47,4 +49,11 @@ TEST_F(MatrixTest, MatrixAssignment) {
     Matrix matrixE;
     matrixE = matrixC;
     EXPECT_EQ(matrixE.data, matrixC.data);
+}
+
+TEST_F(MatrixTest, MatrixToVector) {
+    auto vectorA = matrixA.vector();
+    std::vector<MATRIX_TYPE> expected = {1,2,3,4,5,6};
+
+    EXPECT_EQ(vectorA, expected);
 }

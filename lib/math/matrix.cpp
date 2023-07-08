@@ -68,3 +68,16 @@ void Matrix::display() const {
         std::cout << std::endl;
     }
 }
+
+std::vector<MATRIX_TYPE> Matrix::vector()
+{
+    std::vector<MATRIX_TYPE> result;
+
+    for(unsigned int i = 0; i < data.size(); ++i)
+    {
+        for(unsigned int j = 0; j < data[0].size(); ++j)
+            result.push_back(data[i][j]);
+    }
+
+    return result;
+}

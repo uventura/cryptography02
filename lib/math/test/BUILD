@@ -5,6 +5,7 @@ cc_test(
     ],
     deps = [
         "@gtest//:gtest_main",
-        "//lib/math:matrix"
+        "//lib/math:matrix",
+        "//lib/aes-128:defines"
     ],
 )

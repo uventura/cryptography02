@@ -22,6 +22,8 @@ public:
 
     void setElement(unsigned int row, unsigned int col, unsigned int value);
     void display() const;
+
+    std::vector<MATRIX_TYPE> vector();
 };
 
 #endif  // MATRIX_H

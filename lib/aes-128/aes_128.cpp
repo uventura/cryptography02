@@ -44,6 +44,24 @@ Matrix AES128::add_round_key(Matrix block, Key key)
     return block ^ key.key_matrix();
 }
 
+Matrix AES128::sub_bytes(Matrix block)
+{
+    Matrix result(MATRIX_SIZE, MATRIX_SIZE);
+    for(unsigned int row = 0; row < block.data.size(); ++row)
+        for(unsigned int col = 0; col < block.data[0].size(); ++col)
+            result.data[row][col] = _sbox[block.data[row][col]];
+    return result;
+}
+
+Matrix AES128::inv_sub_bytes(Matrix block)
+{
+    Matrix result(MATRIX_SIZE, MATRIX_SIZE);
+    for(unsigned int row = 0; row < block.data.size(); ++row)
+        for(unsigned int col = 0; col < block.data[0].size(); ++col)
+            result.data[row][col] = _inv_sbox[block.data[row][col]];
+    return result;
+}
+
 // PRIVATE
 std::vector<Matrix> AES128::create_empty_blocks(unsigned int blocks_number)
 {

@@ -28,6 +28,26 @@ TEST_F(AES128Test, AES128Encrypt) {
     EXPECT_EQ(1, 1);
 }
 
+//---| AES-128 Steps |---
+TEST_F(AES128Test, AddRoundKeyTest)
+{
+    std::vector<Matrix> blocks = aes.get_blocks_matrix(random_message);
+    for(unsigned int index_block = 0; index_block < blocks.size(); ++index_block)
+    {
+        Matrix encrypt_result = aes.add_round_key(blocks[index_block], random_key);
+        Matrix decrypt_result = encrypt_result ^ random_key.key_matrix();
+
+        EXPECT_EQ(decrypt_result.data, blocks[index_block].data);
+    }
+}
+
+TEST_F(AES128Test, SubBytesTest)
+{
+    Matrix matrix = aes.get_blocks_matrix("Lorem ipsum dolor sit amet, consectet")[0];
+    EXPECT_EQ(aes.inv_sub_bytes(aes.sub_bytes(matrix)).data, matrix.data);
+    EXPECT_EQ(aes.sub_bytes(aes.inv_sub_bytes(matrix)).data, matrix.data);
+}
+
 //---| AES-128 Basic Functionalities |---
 TEST_F(AES128Test, RemoveWhiteSpacesTest) {
     std::string result = aes.remove_white_spaces("This is my string ");
@@ -65,18 +85,6 @@ TEST_F(AES128Test, TestingBlocksConstruction)
     EXPECT_EQ(result[1].data, result_1);
 }
 
-TEST_F(AES128Test, AddRoundKeyTest)
-{
-    std::vector<Matrix> blocks = aes.get_blocks_matrix(random_message);
-    for(unsigned int index_block = 0; index_block < blocks.size(); ++index_block)
-    {
-        Matrix encrypt_result = aes.add_round_key(blocks[index_block], random_key);
-        Matrix decrypt_result = encrypt_result ^ random_key.key_matrix();
-
-        EXPECT_EQ(decrypt_result.data, blocks[index_block].data);
-    }
-}
-
 TEST_F(AES128Test, SBOXTestValue)
 {
     unsigned char result = aes.look_sbox('\x61');
@@ -88,3 +96,4 @@ TEST_F(AES128Test, InvSBOXTestValue)
     unsigned char result = aes.look_inv_sbox('\xA1');
     EXPECT_EQ(result, (unsigned char)('\xF1'));
 }
+

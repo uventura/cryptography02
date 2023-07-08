@@ -33,6 +33,8 @@ class AES128
 
         //--| AES Steps |---
         Matrix add_round_key(Matrix block, Key key);
+        Matrix sub_bytes(Matrix block);
+        Matrix inv_sub_bytes(Matrix block);
 };
 
 #endif

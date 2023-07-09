@@ -1,4 +1,5 @@
 #include "lib/rsa/rsa.hpp"
+#include "lib/rsa/defines.hpp"
 
 #include "gtest/gtest.h"
 
@@ -17,4 +18,21 @@ TEST_F(RSATest, IsPrimeOperation) {
 
 TEST_F(RSATest, IsPrimeGenerationOperation) {
     EXPECT_EQ(true, rsa.is_prime(rsa.generate_prime()));
+}
+
+TEST_F(RSATest, TransformTextToNum) {
+    std::vector<ENCRYPT_TYPE> result = {'m', 'e', 's', 's'};
+    EXPECT_EQ(result, rsa.transform_text_to_num("mess"));
+}
+
+TEST_F(RSATest, InvTransformTextToNum) {
+    std::vector<ENCRYPT_TYPE> result = {'m', 'e', 's', 's'};
+    EXPECT_EQ("mess", rsa.inv_transform_text_to_num(result));
+}
+
+TEST_F(RSATest, EncryptionDecryption) {
+    auto key = rsa.key_generation();
+    auto encrypt = rsa.encrypt("mess", key.public_key);
+    auto decrypt = rsa.decrypt(encrypt, key.private_key);
+    EXPECT_EQ("mess", decrypt);
 }

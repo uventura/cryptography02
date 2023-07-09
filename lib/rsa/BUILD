@@ -18,10 +18,6 @@ cc_library(
     ],
     linkopts = [
 		"-lgmp",
-		"-lgmpxx"
+		"-lgmpxx",
 	],
-	copts = [
-		"-lgmp",
-		"-lgmpxx"
-	]
 )

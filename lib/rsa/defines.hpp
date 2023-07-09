@@ -1,1 +1,2 @@
 #define RSA_BIT_LENGTH 1024
+#define E_CONSTANT 65537

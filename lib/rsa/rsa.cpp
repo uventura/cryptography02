@@ -1,5 +1,8 @@
 #include "lib/rsa/rsa.hpp"
 
+#include <iostream>
+#include <utility>
+#include <tuple>
 #include <gmp.h>
 #include <gmpxx.h>
 
@@ -70,4 +73,24 @@ mpz_class RSA::generate_prime(int bit_length) {
 
     gmp_randclear(state);
     return p;
+}
+
+RSAKey RSA::key_generation()
+{
+    RSAKey keys;
+
+    mpz_class p = generate_prime();
+    mpz_class q = generate_prime();
+    mpz_class n = p;
+
+    mpz_class totient = (p - 1) * (q - 1);
+    mpz_class e = E_CONSTANT;
+
+    mpz_class d = -1, gcd_v = 1;
+    mpz_gcdext(gcd_v.get_mpz_t(), d.get_mpz_t(), _k_element.get_mpz_t(), e.get_mpz_t(), totient.get_mpz_t());
+
+    keys.private_key = std::make_pair(d, n);
+    keys.public_key = std::make_pair(e, n);
+
+    return keys;
 }

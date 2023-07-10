@@ -24,6 +24,10 @@ jobs:
       run: |
         sudo apt-get install -y libgmp-dev
 
+    - name: Installing  Library Crypto++
+      run: |
+        sudo apt-get install -y libcrypto++-dev
+
     - name: Test Library
       run: |
         "${GITHUB_WORKSPACE}/bin/bazel" test --test_output=all //lib/...

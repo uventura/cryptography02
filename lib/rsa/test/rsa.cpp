@@ -36,3 +36,8 @@ TEST_F(RSATest, EncryptionDecryption) {
     auto decrypt = rsa.decrypt(encrypt, key.private_key);
     EXPECT_EQ("mess", decrypt);
 }
+
+TEST_F(RSATest, ApplySHA3) {
+    EXPECT_EQ("D46E9BEBD3F20DC424D44C15F33E8FB947F8B10D4FC1C1A1C6BD0A3F12634397",
+            rsa.apply_sha3_256("Oh boy, here we go again :("));
+}

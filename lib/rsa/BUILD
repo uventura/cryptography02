@@ -19,5 +19,6 @@ cc_library(
     linkopts = [
 		"-lgmp",
 		"-lgmpxx",
+        "-lcrypto++",
 	],
 )

@@ -5,6 +5,9 @@
 #include <gmpxx.h>
 #include <vector>
 
+#include <cryptopp/sha3.h>
+#include <cryptopp/hex.h>
+
 struct RSAKey
 {
     std::pair<mpz_class, mpz_class> public_key;
@@ -25,4 +28,7 @@ class RSA
         std::string inv_transform_text_to_num(std::vector<ENCRYPT_TYPE> enc_text);
         std::vector<ENCRYPT_TYPE> encrypt(std::string message, std::pair<mpz_class, mpz_class> public_key);
         std::string decrypt(std::vector<ENCRYPT_TYPE> encrypted, std::pair<mpz_class, mpz_class> public_key);
+
+        // Signature
+        std::string apply_sha3_256(std::string message);
 };

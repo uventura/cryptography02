@@ -143,3 +143,24 @@ std::string RSA::decrypt(std::vector<ENCRYPT_TYPE> encrypted, std::pair<mpz_clas
     }
     return inv_transform_text_to_num(result_block);
 }
+
+//---| SIGNATURE |---
+std::string RSA::apply_sha3_256(std::string message)
+{
+    CryptoPP::SHA3_256 sha3;
+
+    // Compute Hash
+    sha3.Update(reinterpret_cast<const byte*>(message.data()), message.size());
+
+    // Retrieve Hash
+    byte hash[CryptoPP::SHA3_256::DIGESTSIZE];
+    sha3.Final(hash);
+
+    // Transform into string
+    std::string result;
+    CryptoPP::HexEncoder encoder(new CryptoPP::StringSink(result));
+    encoder.Put(hash, sizeof(hash));
+    encoder.MessageEnd();
+
+    return result;
+}

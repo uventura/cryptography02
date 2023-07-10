@@ -24,7 +24,7 @@ jobs:
       run: |
         sudo apt-get install -y libgmp-dev
 
-    - name: Installing  Library Crypto++
+    - name: Installing Crypto++ Library
       run: |
         sudo apt-get install -y libcrypto++-dev
 

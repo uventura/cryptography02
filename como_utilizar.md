@@ -22,7 +22,7 @@ E para realizar os testes:
 
 ## Como verificar os testes no GitHub
 
-Em https://github.com/uventura/cryptography02, vá na tab **actions** e então clique no primeiro elemento da lista exibida e por fim, no bloco de teste realizado, exemplo:
+Em https://github.com/uventura/cryptography02, vá na tab **actions** e então clique no primeiro elemento da lista exibida e por fim, no bloco de teste realizado e no passo **"Test Library"** você pode verificar os testes, exemplo:
 
 (verifique a pasta de imagens)
 

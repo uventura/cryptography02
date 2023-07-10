@@ -234,7 +234,15 @@ std::string RSA::decode_base64(std::string message)
     return decoded;
 }
 
-std::vector<ENCRYPT_TYPE> RSA::sign_message(std::string message, std::pair<mpz_class, mpz_class> private_key)
+RSAMessage RSA::sign_message(std::string message, std::pair<mpz_class, mpz_class> private_key)
 {
-    return encrypt(message, private_key);
+    auto digest = apply_sha3_256(message);
+    return {encrypt(digest, private_key), encode_base64(message)};
+}
+
+bool RSA::verify_message(RSAMessage enc_message, std::pair<mpz_class, mpz_class> public_key)
+{
+    std::string message = decode_base64(enc_message.message_base64);
+    auto digest2 = apply_sha3_256(message);
+    return digest2 == decrypt(enc_message.signature, public_key);
 }

@@ -57,3 +57,10 @@ TEST_F(RSATest, EncodeDecodeBase64) {
     std::string result = "hello";
     EXPECT_EQ(rsa.decode_base64(rsa.encode_base64(result)), result);
 }
+
+TEST_F(RSATest, SignatureDocument) {
+    auto keys = rsa.key_generation();
+    std::string message = "This is my ultra secret message muahahaha";
+
+    EXPECT_EQ(true, rsa.verify_message(rsa.sign_message(message, keys.private_key), keys.public_key));
+}

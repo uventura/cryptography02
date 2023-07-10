@@ -15,6 +15,12 @@ struct RSAKey
     std::pair<mpz_class, mpz_class> private_key;
 };
 
+struct RSAMessage
+{
+    std::vector<ENCRYPT_TYPE> signature;
+    std::string message_base64;
+};
+
 class RSA
 {
     private:
@@ -38,5 +44,7 @@ class RSA
         std::string apply_sha3_256(std::string message);
         std::string encode_base64(std::string message);
         std::string decode_base64(std::string message);
-        std::vector<ENCRYPT_TYPE> sign_message(std::string message, std::pair<mpz_class, mpz_class> private_key);
+
+        RSAMessage sign_message(std::string message, std::pair<mpz_class, mpz_class> private_key);
+        bool verify_message(RSAMessage enc_message, std::pair<mpz_class, mpz_class> public_key);
 };

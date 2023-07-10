@@ -85,20 +85,25 @@ RSAKey RSA::key_generation()
 {
     RSAKey keys;
 
-    mpz_class p = generate_prime();
-    mpz_class q = generate_prime();
-    mpz_class n = p;
+    while(true)
+    {
+        mpz_class p = generate_prime();
+        mpz_class q = generate_prime();
+        mpz_class n = p;
 
-    mpz_class totient = (p - 1) * (q - 1);
-    mpz_class e = E_CONSTANT;
+        mpz_class totient = (p - 1) * (q - 1);
+        mpz_class e = E_CONSTANT;
 
-    mpz_class d = -1, k, gcd_v = 1;
-    mpz_gcdext(gcd_v.get_mpz_t(), d.get_mpz_t(), k.get_mpz_t(), e.get_mpz_t(), totient.get_mpz_t());
+        mpz_class d = -1, k, gcd_v = 1;
+        mpz_gcdext(gcd_v.get_mpz_t(), d.get_mpz_t(), k.get_mpz_t(), e.get_mpz_t(), totient.get_mpz_t());
 
-    keys.private_key = std::make_pair(d, n);
-    keys.public_key = std::make_pair(e, n);
-
-    return keys;
+        if(d * e + k * totient == 1)
+        {
+            keys.private_key = std::make_pair(d, n);
+            keys.public_key = std::make_pair(e, n);
+            return keys;
+        }
+    }
 }
 
 std::vector<ENCRYPT_TYPE> RSA::transform_text_to_num(std::string text)
@@ -117,8 +122,10 @@ std::string RSA::inv_transform_text_to_num(std::vector<ENCRYPT_TYPE> enc_text)
     std::string result="";
     for(unsigned int i=0; i < enc_text.size(); ++i)
     {
+        // std::cout << enc_text[i] << "\n";
         size_t size = mpz_size(enc_text[i].get_mpz_t());
         std::vector<char> buffer(size);
+        // std::cout << buffer.size() << "\n";
         mpz_export(buffer.data(), nullptr, 1, sizeof(unsigned char), 0, 0, enc_text[i].get_mpz_t());
         result += (char)(buffer[0]);
     }
@@ -159,7 +166,7 @@ std::string RSA::apply_sha3_256(std::string message)
     sha3.Update(reinterpret_cast<const byte*>(message.data()), message.size());
 
     // Retrieve Hash
-    byte hash[CryptoPP::SHA3_256::DIGESTSIZE];
+    unsigned char hash[CryptoPP::SHA3_256::DIGESTSIZE];
     sha3.Final(hash);
 
     // Transform into string

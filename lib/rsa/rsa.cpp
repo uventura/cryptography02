@@ -163,7 +163,7 @@ std::string RSA::apply_sha3_256(std::string message)
     CryptoPP::SHA3_256 sha3;
 
     // Compute Hash
-    sha3.Update(reinterpret_cast<const byte*>(message.data()), message.size());
+    sha3.Update(reinterpret_cast<const unsigned char*>(message.data()), message.size());
 
     // Retrieve Hash
     unsigned char hash[CryptoPP::SHA3_256::DIGESTSIZE];

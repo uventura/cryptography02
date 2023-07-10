@@ -41,3 +41,19 @@ TEST_F(RSATest, ApplySHA3) {
     EXPECT_EQ("D46E9BEBD3F20DC424D44C15F33E8FB947F8B10D4FC1C1A1C6BD0A3F12634397",
             rsa.apply_sha3_256("Oh boy, here we go again :("));
 }
+
+TEST_F(RSATest, EncodeBase64) {
+    EXPECT_EQ("YWI=",
+            rsa.encode_base64("ab"));
+}
+
+TEST_F(RSATest, DecodeBase64) {
+    std::string result = rsa.decode_base64("YWI=");
+    std::string expected("ab\0");
+    EXPECT_EQ(expected, result);
+}
+
+TEST_F(RSATest, EncodeDecodeBase64) {
+    std::string result = "hello";
+    EXPECT_EQ(rsa.decode_base64(rsa.encode_base64(result)), result);
+}

@@ -6,6 +6,12 @@
 #include <gmp.h>
 #include <gmpxx.h>
 
+RSA::RSA()
+{
+    _base64 = BASE64;
+    _base64_inv = INV_BASE64;
+}
+
 bool RSA::is_prime(const mpz_class& n, int k)
 {
     if (n <= 1) {
@@ -163,4 +169,65 @@ std::string RSA::apply_sha3_256(std::string message)
     encoder.MessageEnd();
 
     return result;
+}
+
+std::string RSA::encode_base64(std::string message)
+{
+    std::string binary_message = "";
+    for(auto letter: message)
+    {
+        std::string binary_letter = "";
+        for(unsigned int shifts = 0; shifts < 8; ++shifts)
+        {
+            char bit_value = (letter & (1 << shifts)) ? '1':'0';
+            binary_letter = bit_value + binary_letter;
+        }
+        binary_message += binary_letter;
+    }
+
+    while (binary_message.size() % 6 != 0) {
+        binary_message += '0';
+    }
+
+    std::string result = "";
+    for (size_t i = 0; i < binary_message.size(); i += 6) {
+        std::string sub_binary = binary_message.substr(i, 6);
+        char new_value = _base64[sub_binary];
+        result += new_value;
+    }
+
+    while (result.size() % 4 != 0) {
+        result += '=';
+    }
+
+    return result;
+}
+
+std::string RSA::decode_base64(std::string message)
+{
+    std::string decoded = "";
+
+    std::string encoded_without_padding = message;
+    encoded_without_padding.erase(std::remove(encoded_without_padding.begin(), encoded_without_padding.end(), '='), encoded_without_padding.end());
+
+    std::string binary;
+    for (char c : encoded_without_padding) {
+        binary += _base64_inv[c];
+    }
+
+    for (unsigned int i = 0; i < binary.size(); i += 8) {
+        std::string sub_binary = binary.substr(i, 8);
+        char decoded_char = 0;
+        for (unsigned int j = 0; j < sub_binary.size(); ++j) {
+            decoded_char = (decoded_char << 1) | (sub_binary[j] - '0');
+        }
+        if(decoded_char != 0)
+            decoded += decoded_char;
+    }
+    return decoded;
+}
+
+std::vector<ENCRYPT_TYPE> RSA::sign_message(std::string message, std::pair<mpz_class, mpz_class> private_key)
+{
+    return encrypt(message, private_key);
 }

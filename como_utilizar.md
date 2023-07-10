@@ -26,8 +26,8 @@ Em https://github.com/uventura/cryptography02, vá na tab **actions** e então c
 
 (verifique a pasta de imagens)
 
-`<img src = "images/01_actions.png"/>`
+<img src = "images/01_actions.png"/>
 
-`<img src = "images/02_testing.png"/>`
+<img src = "images/02_testing.png"/>
 
-`<img src = "images/03_verify_tests.png"/>`
+<img src = "images/03_verify_tests.png"/>
